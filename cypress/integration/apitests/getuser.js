@@ -27,6 +27,7 @@ describe("Implementation of GET API Test", () => {
       expect(response.status).to.eq(200);
       expect(response.body.data.name).to.eq("Prof. Anjushri Iyer");
       expect(response.body.data.gender).to.eq("female");
+      expect(response.body.data.status).to.eq("active");
     });
   });
 });
