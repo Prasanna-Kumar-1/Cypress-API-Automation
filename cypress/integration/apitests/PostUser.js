@@ -11,24 +11,27 @@ describe("Implementation of POST API Test", () => {
       randomText += pattern.charAt(Math.floor(Math.random() * pattern.length));
       testMail = randomText + "@gmail.com";
     }
-    cy.request({
-      method: "POST",
-      url: "https://gorest.co.in/public/v1/users",
-      headers: {
-        authorization: "Bearer " + accessToken,
-      },
-      body: {
-        name: "Prasanna Mallisetty",
-        email: testMail,
-        gender: "male",
-        status: "Active",
-      },
-    }).then((response) => {
-      cy.log(JSON.stringify(response));
-      expect(response.status).to.eq(201);
-      expect(response.body.data).has.property("email", testMail);
-      expect(response.body.data).has.property("name", "Prasanna Mallisetty");
-      expect(response.body.data).has.property("gender", "male");
+
+    cy.fixture("testdata").then((data) => {
+      cy.request({
+        method: "POST",
+        url: "https://gorest.co.in/public/v1/users",
+        headers: {
+          authorization: "Bearer " + accessToken,
+        },
+        body: {
+          name: data.name,
+          email: testMail,
+          gender: data.gender,
+          status: data.status,
+        },
+      }).then((response) => {
+        cy.log(JSON.stringify(response));
+        expect(response.status).to.eq(201);
+        expect(response.body.data).has.property("email", testMail);
+        expect(response.body.data).has.property("name", "Prasanna Mallisetty");
+        expect(response.body.data).has.property("gender", "male");
+      });
     });
   });
 });
