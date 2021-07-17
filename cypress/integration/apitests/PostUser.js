@@ -25,13 +25,34 @@ describe("Implementation of POST API Test", () => {
           gender: data.gender,
           status: data.status,
         },
-      }).then((response) => {
-        cy.log(JSON.stringify(response));
-        expect(response.status).to.eq(201);
-        expect(response.body.data).has.property("email", testMail);
-        expect(response.body.data).has.property("name", "Prasanna Mallisetty");
-        expect(response.body.data).has.property("gender", "male");
-      });
+      })
+        .then((response) => {
+          cy.log(JSON.stringify(response));
+          expect(response.status).to.eq(201);
+          expect(response.body.data).has.property("email", testMail);
+          expect(response.body.data).has.property("name", data.name);
+          expect(response.body.data).has.property("gender", data.gender);
+          expect(response.body.data).has.property("status", data.status);
+        })
+        .then((response) => {
+          const userId = response.body.data.id;
+          cy.log("User Id is: " + userId);
+
+          cy.request({
+            method: "GET",
+            url: "https://gorest.co.in/public/v1/users/" + userId,
+            headers: {
+              authorization: "Bearer " + accessToken,
+            },
+          }).then((response) => {
+            expect(response.status).to.eq(200);
+            expect(response.body.data).has.property("id", userId);
+            expect(response.body.data).has.property("email", testMail);
+            expect(response.body.data).has.property("name", data.name);
+            expect(response.body.data).has.property("gender", data.gender);
+            expect(response.body.data).has.property("status", data.status);
+          });
+        });
     });
   });
 });
